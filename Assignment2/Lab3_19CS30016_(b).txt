@@ -1,0 +1,66 @@
+CREATE TABLE event (
+    event_ID varchar(255),
+    event_name varchar(255),
+    1st_name varchar(255),
+    1st_score numeric(10,0),
+    2nd_name varchar(255),
+    2nd_score numeric(10,0),
+    3rd_name varchar(255),
+    3rd_score numeric(10,0),
+    PRIMARY KEY (event_ID)
+);
+
+CREATE TABLE IIT (
+    IIT_ID varchar(255),
+    player_id varchar(255),
+    team_id varchar(255),
+    IIT_name varchar(255),
+    PRIMARY KEY (IIT_ID),
+    FOREIGN KEY (player_id) REFERENCES player(player_id), 
+    FOREIGN KEY (team_id) REFERENCES team(team_id) 
+);
+
+CREATE TABLE player (
+    player_id varchar(255),
+    player_name varchar(255),
+    PRIMARY KEY (player_id)
+);
+
+CREATE TABLE team (
+    team_id varchar(255),
+    team_name varchar(255),
+    player_id varchar(255),
+    PRIMARY KEY (team_id),
+    FOREIGN KEY (player_id) REFERENCES player(player_id) 
+);
+
+CREATE TABLE participants_in_event (
+    event_id varchar(255),
+    IIT_ID varchar(255),
+    FOREIGN KEY (event_id) REFERENCES event(event_id),
+    FOREIGN KEY (IIT_ID) REFERENCES IIT(IIT_ID)   
+);
+
+CREATE TABLE results(
+    results_id varchar(255),
+    IIT_ID varchar(255),
+    event_id varchar(255),
+     PRIMARY KEY (results_id),
+    FOREIGN KEY (event_id) REFERENCES event(event_id),
+    FOREIGN KEY (IIT_ID) REFERENCES IIT(IIT_ID)   
+);
+
+CREATE TABLE final_score(
+    rank_id INT,
+    IITname varchar(255),
+    total_score numeric(10,0),
+    PRIMARY KEY (rank_ID)   
+);
+
+
+
+
+
+
+
+
