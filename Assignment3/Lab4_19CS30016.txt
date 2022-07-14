@@ -1,0 +1,148 @@
+
+----------------------- QUERY 1 ------------------------------------------
+
+SELECT A.RNo as RId,A.RName as RName,B.RNo as FId,B.RName FName,Course.CId as CId,Course.CName as CName
+FROM RegUser as A, RegUser as B, CourseReg, Course, Faculty
+WHERE A.HigheshQual='BTECH'
+AND CourseReg.RNo=RegUser.RNo
+AND Course.CId=CourseReg.CId
+AND Course.FId is not null
+AND Faculty.FId=Course.FId
+AND B.RNo=Faculty.FId 
+;
+SELECT Fac.id as FId,RegUser.RName as FName,RegUser.HighestQual as HighestQual
+FROM RegUser,(SELECT Faculty.FId,COUNT(Course.CId)
+FROM Faculty,Course
+WHERE Faculty.FId=Course.FId
+AND Course.CId IN(
+	SELECT Course.CId
+	FROM Course,Prerequisite
+	WHERE Course.CDuration <> 'SHORT'
+	AND (Course.CDept='CSE' OR Course.CDept='ML')
+	AND Prerequisite.CId=Course.CId 
+	AND Prerequisite.PreqCId NOT IN(SELECT CId FROM PREREQUISITE)
+)
+GROUP BY Faculty.FId) AS Fac(id,ctr)
+WHERE Fac.ctr >= 2
+AND RegUser.RNo=Fac.id
+;
+----------------------- QUERY 2 ------------------------------------------
+
+B.6
+
+SELECT RegUser.RNo as RId, RegUser.RName as RName, CourseReg.CId as CId, Course.CName as CName, CourseReg.Score as Score
+FROM CourseReg LEFT OUTER JOIN Course on CourseReg.CId=Course.CId, RegUser
+WHERE (Course.CDept='CS' OR Course.CDept='EE'OR Course.CDept='ECE')
+AND RegUser.RNo=CourseReg.RNo
+AND RegUser.HigheshQual <>'PHD'
+AND RegUser.RDept='ME'
+ORDER BY CourseReg.Score
+LIMIT 3
+;
+
+----------------------- QUERY 3 ------------------------------------------
+
+E.6
+
+SELECT RegUser.RNo,RegUser.RName
+FROM RegUser,Course
+(SELECT RegUser.Rno,COUNT(Course.CId)
+FROM RegUser,Course
+) AS CourseCount(id,ctr)
+WHERE CourseCount.ctr>2
+AND RegUser.Age=20
+;
+----------------------- QUERY 4 ------------------------------------------
+
+F.6
+
+SELECT DISTINCT A.CId, A.CName,A.Cdept
+FROM Course as A, Prerequisite, Course as B
+WHERE (A.CDept='ECE' OR A.Cdept = 'EE')
+AND Prerequisite.CId=A.CId
+AND B.CId=Prerequisite.CId
+AND B.CDuration = 'MEDIUM';
+;
+----------------------- QUERY 5 ------------------------------------------
+
+G.6
+
+SELECT Faculty.FId,Course.CId,Course.CName,Faculty.ResearchArea
+FROM Faculty,Course,
+(SELECT Faculty.FId, COUNT(Course.CId)
+FROM Faculty, Course
+WHERE (Course.CDept='CSE' OR Course.CDept='ECE')
+AND Course.FId=Faculty.FId
+) AS CourseCount(id,ctr)
+WHERE CourseCount.ctr >= 2
+AND Faculty.FId=CourseCount.id
+AND Course.FId=Faculty.FId
+;
+
+----------------------- QUERY 6 ------------------------------------------
+
+I.6
+SELECT DISTINCT RegUser.RNo, RegUser.RName, RegUser.ROccu,RegUser.HighestQual, Faculty.FDept, Faculty.ResearchArea,Course.CId, Course.CName, Course.CDuration
+FROM RegUser, Course, Faculty
+WHERE RegUser.HighestQual='PHD'
+Faculty.FId=RegUser.FId
+AND Faculty.FDept='CSE'
+AND Faculty.ResearchArea='AI'
+AND Course.FId=Faculty.FId
+AND Course.CDuration <> 'LONG'
+;
+
+----------------------- QUERY 7 ------------------------------------------
+
+J.6
+SELECT RegUser.RNo as RNo,RegUser.RName as RName,RegUser.HighestQual as HighestQual,Course.CId as CId,Course.CName as CName,Course.CDept as CDept,CourseReg.Score as Score,Faculty.FId as FId,Faculty.ResearchArea as ResearchArea,Faculty.FDept as FDept,RegUser.Age as Age
+FROM RegUser,Course,Faculty,CourseReg 
+WHERE RegUser.Score>50 AND RegUser.Score<85
+;
+
+----------------------- QUERY 8 ------------------------------------------
+
+L.6
+SELECT Fac.id as FId,RegUser.RName as FName,RegUser.HighestQual as HighestQual
+FROM RegUser,(SELECT Faculty.FId,COUNT(Course.CId)
+FROM Faculty,Course
+WHERE Faculty.FId=Course.FId
+AND Course.CId IN(
+	SELECT Course.CId
+	FROM Course,Prerequisite
+	WHERE Course.CDuration <> 'SHORT'
+	AND (Course.CDept='CSE' OR Course.CDept='ML')
+	AND Prerequisite.CId=Course.CId 
+	AND Prerequisite.PreqCId NOT IN(SELECT CId FROM PREREQUISITE)
+)
+GROUP BY Faculty.FId) AS Fac(id,ctr)
+WHERE Fac.ctr >= 2
+AND RegUser.RNo=Fac.id
+;
+
+----------------------- QUERY 9 ------------------------------------------
+
+M.6
+
+SELECT Faculty.FId,Course.CId,Course.CName
+FROM Faculty,Course,
+(SELECT Faculty.FId
+FROM Faculty,Course,RegUser,Prerequisite
+WHERE Course.CDept='CSE'
+AND RegUser.HighestQual = 'PHD'
+AND Prerequisite.CId = 'NULL'
+AND Prerequisite.PreqCId = 'NULL'
+AND Faculty.FId = Course.FId
+AND Faculty.FId = RegUser.RNo
+) 
+;
+
+----------------------- QUERY 10 ------------------------------------------
+
+P.6
+SELECT RegUser.RName as RName,Course.CName as CName, CourseReg.Score as Score
+FROM CourseReg LEFT OUTER JOIN Course on CourseReg.CId=Course.CId, RegUser
+WHERE RegUser.RNo=CourseReg.RNo
+ORDER BY CourseReg.Score
+LIMIT 3
+;
